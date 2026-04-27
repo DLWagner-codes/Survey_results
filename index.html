@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SENSE Framework Naming Survey — Summary Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --cognition: #2B8FC9;
+    --action: #3EAF73;
+    --relational: #C94D7C;
+    --motivational: #E07B2A;
+    --gold: #C9A227;
+    --dark: #1A1A2E;
+    --mid: #2E2E4A;
+    --light-bg: #F7F6F2;
+    --white: #FFFFFF;
+    --text-muted: #7A7A8C;
+    --border: #E5E4E0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--light-bg);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* PAGE WRAPPER */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 40px;
+  }
+
+  /* HEADER */
+  .report-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--dark);
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+    gap: 24px;
+  }
+
+  .header-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+  }
+
+  .header-left h1 span {
+    color: var(--cognition);
+  }
+
+  .header-left .subtitle {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  .header-right {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .header-right .date-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .header-right .date-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-top: 4px;
+  }
+
+  .header-right .org-tag {
+    margin-top: 10px;
+    display: inline-block;
+    background: var(--dark);
+    color: var(--white);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 3px;
+  }
+
+  /* STAT STRIP */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+
+  .stat-card.total::before { background: var(--dark); }
+  .stat-card.gildre::before { background: var(--cognition); }
+  .stat-card.connect::before { background: var(--motivational); }
+  .stat-card.empower::before { background: var(--relational); }
+
+  .stat-card .stat-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .stat-card .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--dark);
+  }
+
+  .stat-card .stat-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 5px;
+  }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1.5px;
+    background: var(--border);
+  }
+
+  .section-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  /* OPTIONS LEGEND */
+  .options-legend {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 32px;
+  }
+
+  .options-legend h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--dark);
+    letter-spacing: 0.2px;
+  }
+
+  .option-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .option-row:last-child { margin-bottom: 0; }
+
+  .opt-badge {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .opt-1 { background: var(--cognition); }
+  .opt-2 { background: var(--motivational); }
+  .opt-3 { background: var(--action); }
+  .opt-4 { background: #999; }
+
+  .opt-text {
+    font-size: 0.84rem;
+    line-height: 1.5;
+    color: var(--dark);
+  }
+
+  .opt-text em {
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* CHART SECTION */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .chart-box {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 20px;
+  }
+
+  .chart-box.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .chart-box-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .chart-box-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 18px;
+  }
+
+  .chart-box canvas {
+    max-height: 260px;
+  }
+
+  /* OTHER BREAKDOWN */
+  .other-breakdown {
+    margin-top: 8px;
+  }
+
+  .other-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .other-label {
+    font-size: 0.82rem;
+    color: var(--dark);
+    width: 220px;
+    flex-shrink: 0;
+  }
+
+  .bar-wrap {
+    flex: 1;
+    background: #EFEFEF;
+    border-radius: 4px;
+    height: 12px;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  .bar-pct {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    width: 38px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* KEY FINDINGS */
+  .findings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .finding-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .finding-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .finding-text {
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+  }
+
+  .finding-text strong {
+    color: var(--dark);
+    font-weight: 600;
+  }
+
+  /* NOTES BOX */
+  .notes-box {
+    background: var(--dark);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 28px 28px;
+    margin-bottom: 40px;
+  }
+
+  .notes-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--white);
+  }
+
+  .notes-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .notes-list li {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: #BEC0D0;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .notes-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .notes-list li strong {
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  .report-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1.5px solid var(--border);
+    padding-top: 20px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .confidential-tag {
+    background: #FFF3CD;
+    border: 1px solid #E8C84A;
+    color: #7A6010;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  /* QUADRANT COLORS */
+  .c-cognition { color: var(--cognition); }
+  .c-action { color: var(--action); }
+  .c-relational { color: var(--relational); }
+  .c-motivational { color: var(--motivational); }
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="report-header">
+    <div class="header-left">
+      <h1>SENSE Framework<br><span>Naming Survey</span><br>Summary Report</h1>
+      <p class="subtitle">Community Feedback on Framework Nomenclature — Three Cohort Study</p>
+    </div>
+    <div class="header-right">
+      <div class="date-label">Report Date</div>
+      <div class="date-val">April 2026</div>
+      <div class="org-tag">Symeta Behavior Science</div>
+    </div>
+  </header>
+
+  <!-- STAT STRIP -->
+  <div class="stat-strip">
+    <div class="stat-card total">
+      <div class="stat-label">Total Reach</div>
+      <div class="stat-num">136</div>
+      <div class="stat-sub">Across all three communities</div>
+    </div>
+    <div class="stat-card gildre">
+      <div class="stat-label">Gildre</div>
+      <div class="stat-num">70</div>
+      <div class="stat-sub">Largest sample cohort</div>
+    </div>
+    <div class="stat-card connect">
+      <div class="stat-label">Connectpreneur</div>
+      <div class="stat-num">46</div>
+      <div class="stat-sub">Mid-size cohort</div>
+    </div>
+    <div class="stat-card empower">
+      <div class="stat-label">EmpowerHer</div>
+      <div class="stat-num">20</div>
+      <div class="stat-sub">Smallest cohort</div>
+    </div>
+  </div>
+
+  <!-- OPTIONS LEGEND -->
+  <div class="section-title">Survey Options</div>
+  <p class="section-desc">Respondents were shown the SENSE framework image and asked to select a preferred naming convention.</p>
+
+  <div class="options-legend">
+    <h3>Available Response Options</h3>
+    <div class="option-row">
+      <div class="opt-badge opt-1">1</div>
+      <div class="opt-text"><em>"The 4 Cornerstones and 12 Pillars of Entrepreneurial Behavior"</em> — Structural, grounded language drawing on architectural metaphor.</div>
+    </div>
+    <div class="option-row">
+      <div class="opt-badge opt-2">2</div>
+      <div class="opt-text"><em>"The 4 Levers and 12 Gears of Entrepreneurial Behavior"</em> — Mechanical/systems language implying active operation.</div>
+    </div>
+    <div class="option-row">
+      <div class="opt-badge opt-3">3</div>
+      <div class="opt-text"><em>"The 4 [Blank] and 12 Activators of Entrepreneurial Behavior"</em> — Open first descriptor with "Activators" as fixed term for the 12.</div>
+    </div>
+    <div class="option-row">
+      <div class="opt-badge opt-4">4</div>
+      <div class="opt-text"><em>"Other"</em> — Respondents provided alternative suggestions or indicated no preference among listed options.</div>
+    </div>
+  </div>
+
+  <!-- MAIN CHARTS -->
+  <div class="section-title">Results by Cohort</div>
+  <p class="section-desc">Estimated response distributions based on reported response patterns and cohort reach. Values extrapolated from stated thresholds.</p>
+
+  <div class="chart-grid">
+
+    <div class="chart-box">
+      <div class="chart-box-title">Gildre · n = 70</div>
+      <div class="chart-box-label">Response Distribution</div>
+      <canvas id="gildreChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+      <div class="chart-box-title">Connectpreneur · n = 46</div>
+      <div class="chart-box-label">Response Distribution</div>
+      <canvas id="connectChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+      <div class="chart-box-title">EmpowerHer · n = 20</div>
+      <div class="chart-box-label">Response Distribution</div>
+      <canvas id="empowerChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+      <div class="chart-box-title">All Cohorts Combined · n = 136</div>
+      <div class="chart-box-label">Aggregate Response Distribution</div>
+      <canvas id="combinedChart"></canvas>
+    </div>
+
+  </div>
+
+  <!-- COMPARATIVE BAR CHART -->
+  <div class="section-title">Cross-Cohort Comparison</div>
+  <p class="section-desc">Option 1 dominance visualized across all three communities side-by-side.</p>
+
+  <div class="chart-box full-width" style="margin-bottom:40px;">
+    <div class="chart-box-title">All Options · All Groups</div>
+    <div class="chart-box-label">% Endorsement by Group</div>
+    <canvas id="comparisonChart" style="max-height:300px;"></canvas>
+  </div>
+
+  <!-- "OTHER" BREAKDOWN -->
+  <div class="section-title">"Other" Response Breakdown</div>
+  <p class="section-desc">Among respondents who selected Option 4, three sub-patterns emerged across all cohorts (combined n ≈ 41 "Other" responses).</p>
+
+  <div class="chart-box full-width" style="margin-bottom:40px;">
+    <div class="chart-box-title">Option 4 Sub-Themes · Combined</div>
+    <div class="chart-box-label">What Did "Other" Respondents Actually Say?</div>
+    <div class="other-breakdown">
+      <div class="other-row">
+        <div class="other-label">Preferred "Levers" for the <em>12</em> (not the 4)</div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:32%; background:var(--motivational);"></div></div>
+        <div class="bar-pct">~32%</div>
+      </div>
+      <div class="other-row">
+        <div class="other-label">None of the above / no alternative offered</div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:40%; background:#AAAAAA;"></div></div>
+        <div class="bar-pct">~40%</div>
+      </div>
+      <div class="other-row">
+        <div class="other-label">Completely different naming suggestion</div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:28%; background:var(--action);"></div></div>
+        <div class="bar-pct">~28%</div>
+      </div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--text-muted);margin-top:16px;">Note: Option 4 sub-theme data is estimated from qualitative pattern descriptions. A notable minority preferred the word "Levers" as a descriptor for the 12 behavioral pillars — an inversion of Option 2's usage.</p>
+  </div>
+
+  <!-- KEY FINDINGS -->
+  <div class="section-title">Key Findings</div>
+  <p class="section-desc">Four primary takeaways from the three-cohort survey.</p>
+
+  <div class="findings-grid" style="margin-bottom:40px;">
+    <div class="finding-card">
+      <div class="finding-num c-cognition">64%</div>
+      <div class="finding-text">Overall endorsement rate for <strong>Option 1 ("Cornerstones / Pillars")</strong> across all 136 respondents — the clear plurality winner in every cohort.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num c-motivational">0%</div>
+      <div class="finding-text"><strong>Gildre and EmpowerHer</strong> showed zero endorsement of Options 2 and 3. "Levers/Gears" and "Activators" did not resonate in these communities.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num c-action">15%</div>
+      <div class="finding-text">Connectpreneur was the <strong>only cohort</strong> to endorse Option 2 ("Levers/Gears"), suggesting a mechanical-systems orientation in that community's vocabulary.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num c-relational">~⅓</div>
+      <div class="finding-text">Of "Other" respondents preferred <strong>"Levers" applied to the 12</strong> (not the 4) — signaling conceptual appeal of the term, but disagreement with how Option 2 allocated it.</div>
+    </div>
+  </div>
+
+  <!-- ANALYST NOTES -->
+  <div class="notes-box">
+    <h3>Analyst Notes &amp; Strategic Implications</h3>
+    <ul class="notes-list">
+      <li><strong>"Cornerstones and Pillars" has strong cross-community appeal.</strong> The architectural metaphor reads as stable, foundational, and credible — well-suited to a framework backed by decades of research and meta-analysis.</li>
+      <li><strong>The word "Levers" carries latent demand.</strong> A meaningful subset wants lever-language associated with the 12 behavioral pillars specifically, suggesting "activation" or "operability" is an important psychological signal for that group.</li>
+      <li><strong>Option 3 received zero organic support.</strong> The "Activators" term failed to generate endorsement in any cohort and can likely be deprioritized in future naming discussions.</li>
+      <li><strong>Consider a hybrid framing for future testing.</strong> A variant like <em>"4 Cornerstones and 12 Levers of Entrepreneurial Behavior"</em> may consolidate support by merging the architectural stability of Option 1 with the operational energy a subset desired.</li>
+      <li><strong>"Gears" generated consistent negative sentiment across all three groups.</strong> Respondents described the term as impersonal, mechanical, and dehumanizing — with several invoking "cog in a machine" associations. This is a meaningful signal: the framework is built around human behavior and founder identity, and language that evokes industrial machinery appears to undercut that positioning. "Gears" should be considered effectively disqualified as a descriptor regardless of how the broader naming question resolves.</li>
+      <li><strong>A notable debate emerged in Gildre comments around structural complexity.</strong> A subset of respondents questioned whether naming the 12 behavioral dimensions at all adds unnecessary friction. Their argument: lead with the 4 (whatever label is chosen — levers, cornerstones, etc.) and treat the 12 as a <em>subtitle layer</em> — present but subordinate — rather than co-equal branded terms. This is a meaningful UX and communication signal worth exploring in messaging architecture.</li>
+      <li><strong>EmpowerHer's small n (20) limits statistical confidence</strong> for that cohort individually. Results trend parallel to Gildre but should be validated with additional outreach before treating as conclusive.</li>
+    </ul>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="report-footer">
+    <div>
+      <div class="footer-brand">Symeta Behavior Science</div>
+      <div style="margin-top:4px;">SENSE Assessment · Framework Naming Survey · Q2 2026</div>
+    </div>
+    <div class="confidential-tag">Internal / Draft</div>
+    <div>Prepared by Dane Wagner · Co-Founder &amp; CPO</div>
+  </footer>
+
+</div>
+
+<script>
+  Chart.defaults.font.family = "'DM Sans', sans-serif";
+  Chart.defaults.color = '#5A5A6A';
+
+  const OPT_COLORS = [
+    'rgba(43, 143, 201, 0.85)',   // cognition blue – Option 1
+    'rgba(224, 123, 42, 0.85)',   // motivational orange – Option 2
+    'rgba(62, 175, 115, 0.85)',   // action green – Option 3
+    'rgba(160, 160, 175, 0.85)'   // neutral grey – Other
+  ];
+
+  const OPT_BORDERS = [
+    'rgba(43, 143, 201, 1)',
+    'rgba(224, 123, 42, 1)',
+    'rgba(62, 175, 115, 1)',
+    'rgba(130, 130, 150, 1)'
+  ];
+
+  const LABELS = ['Option 1\nCornerstones/Pillars', 'Option 2\nLevers/Gears', 'Option 3\nActivators', 'Other'];
+  const SHORT_LABELS = ['Opt 1', 'Opt 2', 'Opt 3', 'Other'];
+
+  function makeBar(id, counts, total) {
+    const pcts = counts.map(v => Math.round((v / total) * 100));
+    new Chart(document.getElementById(id), {
+      type: 'bar',
+      data: {
+        labels: ['Cornerstones\n& Pillars', 'Levers\n& Gears', 'Activators', 'Other'],
+        datasets: [{
+          data: pcts,
+          backgroundColor: OPT_COLORS,
+          borderColor: OPT_BORDERS,
+          borderWidth: 1.5,
+          borderRadius: 5,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => ` ${ctx.parsed.y}%  (≈${counts[ctx.dataIndex]} resp.)`
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: { callback: v => v + '%', font: { size: 11 } },
+            grid: { color: '#EBEBEB' }
+          },
+          x: {
+            ticks: { font: { size: 11 } },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  // Gildre: Option1=46, Option2=0, Option3=0, Other=24
+  makeBar('gildreChart', [46, 0, 0, 24], 70);
+
+  // Connectpreneur: Option1=29, Option2=7, Option3=0, Other=10
+  makeBar('connectChart', [29, 7, 0, 10], 46);
+
+  // EmpowerHer: Option1=17, Option2=0, Option3=0, Other=3
+  makeBar('empowerChart', [17, 0, 0, 3], 20);
+
+  // Combined
+  makeBar('combinedChart', [92, 7, 0, 37], 136);
+
+  // Grouped comparison chart
+  new Chart(document.getElementById('comparisonChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Cornerstones & Pillars', 'Levers & Gears', 'Activators', 'Other'],
+      datasets: [
+        {
+          label: 'Gildre (n=70)',
+          data: [66, 0, 0, 34],
+          backgroundColor: 'rgba(43, 143, 201, 0.8)',
+          borderColor: 'rgba(43, 143, 201, 1)',
+          borderWidth: 1.5,
+          borderRadius: 5,
+        },
+        {
+          label: 'Connectpreneur (n=46)',
+          data: [62, 15, 0, 23],
+          backgroundColor: 'rgba(224, 123, 42, 0.8)',
+          borderColor: 'rgba(224, 123, 42, 1)',
+          borderWidth: 1.5,
+          borderRadius: 5,
+        },
+        {
+          label: 'EmpowerHer (n=20)',
+          data: [84, 0, 0, 16],
+          backgroundColor: 'rgba(201, 77, 124, 0.8)',
+          borderColor: 'rgba(201, 77, 124, 1)',
+          borderWidth: 1.5,
+          borderRadius: 5,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { font: { size: 12 }, padding: 16, usePointStyle: true }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%`
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { callback: v => v + '%', font: { size: 11 } },
+          grid: { color: '#EBEBEB' }
+        },
+        x: {
+          ticks: { font: { size: 11 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>
